@@ -98,4 +98,17 @@ class ZarrIO(BaseReaderWriter):
         Use this to restore metadata
         :return:
         """
-        pass
+        zarr_store = zarr.open(output_fname, mode="a")
+
+        segmentation = zarr_store.create(
+            'segmentation',
+            shape=seg.shape,
+            dtype=seg.dtype,
+            compressor=zarr.Blosc(cname='zstd', clevel=5, shuffle=zarr.Blosc.SHUFFLE)
+        )
+
+        segmentation[:] = seg[:, :, :]
+
+        zarr_store.attrs.update({
+            'spacing': properties['spacing']
+        })
