@@ -45,7 +45,6 @@ class ZarrIO(BaseReaderWriter):
             zarr_store = zarr.open(f, mode='r')
             spacing = zarr_store.attrs.get("spacing", [1.0, 1.0, 1.0])
             image = zarr_store['neurofilament'][:]
-            image = np.transpose(image, [2, 1, 0])
             if image.ndim != 3:
                 raise RuntimeError(f"Only 3D images are supported! File: {f}")
             images.append(image[None]) #None is an alias for NP.newaxis. It creates an axis with length 1
